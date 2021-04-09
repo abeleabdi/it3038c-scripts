@@ -73,3 +73,44 @@ Features
 -Infers parameter types through pep484 type hints, default values, and var names.
 -Support for args, kwargs, decorators, errors, and parameter types
 
+Project 2: Phone Tracker by Python
+
+Script:
+
+import phonenumbers
+from test import number
+
+from phonenumbers import geocoder
+ch_number = phonenumbers.parse(number, "CH")
+print(geocoder.description_for_number(ch_number, "en"))
+
+
+from phonenumbers import carrier
+service_number = phonenumbers.parse(number, "RO")
+print(carrier.name_for_number(service_number, "en"))
+
+Usage: This Python script will track phone any cuntry in the world and the phone carrier. 
+
+Documentation:
+
+-Track Phone Number Location Using Python
+
+-Create a folder with two python files and name them how you want to.
+
+-Install a package using the command: (“pip install phonenumber”).
+
+-On the first python file import the package phonenumber.
+
+-On the second file we will enter our phone number we want to track with the country code: (number = “+1----------”).
+
+-Back on the first file import the phone number and create a variable for the phonenumber country.
+
+-Print description for the number which is English “en”.
+
+-Then from the phonenumber import the carrier.
+
+-Lastly print carrier name for phonenumber service number to emglish.
+
+
+
+
