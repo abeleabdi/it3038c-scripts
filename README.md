@@ -113,4 +113,91 @@ Documentation:
 
 
 
+Project 2: Job Tracker / Job Board Scraper to Email. 
+
+Run: "python job_tracker.py"
+
+Step: I Set up the email
+
+Documentation:
+
+1. We import the build-in libraries then we create one function that takes the message as argument.
+2. Then we need to set up the port server with whatever email type and the emails and password.
+3. If you use two-factor authentication then you need different password, so go to "myaccount.google.com/security" and creat an app password.
+4. Lastly we can set up a connection and then try to log in and send the mail.
+
+Script: I
+
+import smtplib, ssl
+
+def send_email(message):
+    port = 465  # For SSL
+    smtp_server = "smtp.gmail.com"
+    sender_email = "abeleabdi@gmail.com"
+    receiver_email = "abeleabdi@gmail.com"
+    password = "jhwq gwvh orxq ypix"
+    
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        try:
+            server.login(sender_email, password)
+            res = server.sendmail(sender_email, receiver_email, message)
+            print('email sent!')
+        except:
+            print("could not login or send the mail.")
+
+Step II: Job Board Scraper
+
+Documentation:
+
+1. First "Pip install requests" pip install requests the module we need and go to "https://remoteok.io/api" copy the link.
+2. Import requests and json, then specify the URL we took from "https://remoteok.io/api" and the keys we wnat to inspect, then we specify the text that we're interested in. For example, Python, javaScript, Backed, ....
+3. Creat function and end a get request to the url and get the json data.
+4. Inerate over all the results and take onlu the specified keys then we get the tags from the tags key.
+5. Convert the list to a set and then call the set.intersection method and if this is true means that at least one if the wanted texts is in the text of the job and we therefore append it to the jobs list.
+6. Then return this list from the function then we say d under name equals main and use this function and if we found suitable chops we create a message and send this message with our send email function. 
+
+Script: II
+
+import requests
+import json
+from send_email import send_email
+
+URL = "https://remoteok.io/api"
+keys = ['date', 'company', 'position', 'tags', 'location', 'url']
+
+wanted_tags = ["python"] # remote, javascript, backend, mobile, ...
+
+def get_jobs():
+    resp = requests.get(URL)
+    job_results = resp.json()
+    
+    jobs = []
+    for job_res in job_results:
+        # take only the specified keys
+        job = {k: v for k, v in job_res.items() if k in keys}
+    
+        if job:
+            tags = job.get('tags')
+            tags = {tag.lower() for tag in tags}
+            if tags.intersection(wanted_tags):
+                jobs.append(job)
+    
+    return jobs
+
+ 
+if __name__ == '__main__':
+    python_jobs = get_jobs()
+    
+    if python_jobs:
+        message = "Subject: Remote Python Jobs!\n\n"
+        message += "Found some cool Python jobs!\n\n"
+        
+        for job in python_jobs:
+            message += f"{json.dumps(job)}\n\n"
+
+        send_email(message)
+  
+
+
 
